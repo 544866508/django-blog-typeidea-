@@ -16,6 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from blog.views import IndexView, CategoryView, TagView, PostDetailView
+from config.views import links
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', IndexView.as_view(), name='home_page'),
+    path('category/<int:category_id>/', CategoryView.as_view(), name='category_post'),
+    path('tag/<int:tag_id>/', TagView.as_view(), name='tag_post'),
+    path('post/<int:post_id>/', PostDetailView.as_view(), name='post_detail'),
+    path('links/', links, name='link'),
 ]

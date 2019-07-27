@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.loader import render_to_string
 
 
 class Link(models.Model):
@@ -58,3 +59,19 @@ class SideBar(models.Model):
     class Meta:
         verbose_name = verbose_name_plural = "侧边栏"
 
+    # 根据siderbar的展示类型display_type来决定返回哪些数据作为siderbar的content
+    @property
+    def get_correct_content(self):
+        from blog.models import Post
+        from comment.models import Comment
+
+        result = ''
+        if self.display_type == self.DISPLAY_HTML:
+            result = self.content
+        elif self.display_type == self.DISPLAY_HOT_POST:
+            context = {'hot_posts': Post.objects.filter(status=Post.STATUS_NOMAL).order_by('-pv')[:10]}
+            result = render_to_string('config/blocks/sidebar_posts.html', context)
+        elif self.display_type == self.DISPLAY_COMMENT:
+            context = {'latest_comments': Comment.objects.filter(status=Comment.STATUS_NOMAL).order_by('-created_time')[:10]}
+            result = render_to_string('config/blocks/sidebar_comments.html', context)
+        return result
