@@ -1,0 +1,31 @@
+{% if latest_posts %}
+    <ul>
+        {% for latest_post in latest_posts %}
+            <li>
+                <p><a href="{% url 'post_detail' latest_post.id %}">{{ latest_post.title }}</a></p>
+            </li>
+        {% endfor %}
+    </ul>
+{% elif hot_posts %}
+    <ul>
+        {% for hot_post in hot_posts %}
+            <li>
+                <p><a href="{% url 'post_detail' hot_post.id %}">{{ hot_post.title }}</a></p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{#最近评论暂不显示到主页#}
+{#{% elif latest_comments %}#}
+{#    <ul>#}
+{#        {% for latest_comment in latest_comments %}#}
+{#            <li>#}
+{#                <a href="{{ latest_comment.target }}">{{ latest_comment.target.title }}</a>#}
+{#                 | {{ latest_comment.nickname }} :#}
+{#                {% autoescape off %}#}
+{#                {{ latest_comment.content }}#}
+{#                {% endautoescape %}#}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#{% endif %}#}
