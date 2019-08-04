@@ -1,0 +1,38 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    <meta charset="UTF-8">
+    <title>登录/注册</title>
+</head>
+<body>
+    <div class="container head">
+        <nav class="nav navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{% url 'home_page' %}">博客系统</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <a class="nav-link" href="{% url 'home_page' %}">首页</a>
+                    <a class="nav-link" href="{% url 'login' %}">登录</a>
+                    <a class="nav-link" href="{% url 'register' %}">注册</a>
+                    <a class="nav-link" href="#">帮助</a>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container main">
+        <h3>注册新用户</h3>
+        <hr>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form userform %}
+            <p style="color:red;">{{ error }}</p>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+        </form>
+    </div>
+</body>
+</html>

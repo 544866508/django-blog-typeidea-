@@ -1,12 +1,16 @@
+{% load bootstrap4 %}
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 
     {% block extra_head %}{% endblock %}
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+{#    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">#}
+{#    <script src="{% static 'jq/jquery-1.9.1.min.js' %}"></script>#}
+    {% bootstrap_css %}
     <meta charset="UTF-8">
     <title>
 
@@ -18,32 +22,124 @@
     .post {
         margin-bottom: 5px; //配置每个post卡片下面的间隔
     }
+    #my_site_introduce{
+        height:1200px;
+        width:100%;
+        background-color: #bbbbbb;
+        {#background: url({% static 'pic/background.jpg' %}) no-repeat;#}
+        {#background-size:100%;#}
+        transition-property:height;
+        transition-duration:3s;
+        overflow: hidden;
+    }
     </style>
 </head>
-<body>
-    <div class="container head">
-        <nav class="nav navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'home_page' %}">首页</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    {% if navcate %}
-                        {% for cate in navcate %}
-                                <a class="nav-link" href="{% url 'category_post' cate.id %}">{{ cate.name }}</a>
-                        {% endfor %}
-                    {% endif %}
-                </ul>
+
+
+<body style="background: #eeeeee">
+{#<div class="header my-before-height" style="background-image: url(http://assets.youzhan.org/img/d/dd/2de797545de56274f03a5920eb3a1.jpg)">#}
+{#  <div class="container">#}
+{#    <div class="row">#}
+{#      <div class="col-xs-12">#}
+{#      <div class="logotxt"><h1><a href="http://www.youzhan.org">Bootstrap<br><span style="font-size:60%;font-weight:normal;">优站精选</span></a></h1></div>#}
+{#    </div>#}
+{#  </div>#}
+
+    <div id="my_site_introduce" class="text-center">
+      <h1 id="introduce_title">Typeidea</h1>
+      <p id="introduce_desc">基于Django的多人博客系统</p>
+      <img id="introduce_site_img" src="{% static 'pic/site_img.png' %}">
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <!-- Brand -->
+      <a class="navbar-brand" href="{% url 'home_page' %}">首页</a>
+      <!-- Links -->
+      <ul class="navbar-nav mr-auto">
+        {% if navcate %}
+            {% for cate in navcate %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'category_post' cate.id %}">{{ cate.name }}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav mr-auto navbar-right">
+        {% if request.session.user_name %}
+            <!-- Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                {{ request.session.user_name }}
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Link 1</a>
+                <a class="dropdown-item" href="#">Link 2</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">注销</a>
+              </div>
+            </li>
+        {% else %}
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">注册</a>
+          </li>
+          <span class="navbar-text">
+            /
+          </span>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">登录</a>
+          </li>
+        {% endif %}
+      </ul>
+      <form class="form-inline" action="{% url 'search' %}" method="GET">
+          <input name="keyword" value="{{ keyword }}" class="form-control" type="search" placeholder="Search"
+                 aria-label="Search">
+          <button class="btn btn-primary" type="submit">搜索</button>
+      </form>
+    </nav>
+
+{#        <nav class="nav navbar-expand-lg navbar-light bg-light">#}
+{#            <a class="navbar-brand" href="{% url 'home_page' %}">首页</a>#}
+{#            <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
+{#                <ul class="navbar-nav mr-auto">#}
+{#                    {% if navcate %}#}
+{#                        {% for cate in navcate %}#}
+{#                                <a class="nav-link" href="{% url 'category_post' cate.id %}">{{ cate.name }}</a>#}
+{#                        {% endfor %}#}
+{#                    {% endif %}#}
+{#                </ul>#}
+{#                <ul class="navbar-nav mr-auto navbar-right">#}
+{#                    {% if request.session.user_name %}#}
+{#                        <a class="nav-link" href="#">{{ request.session.user_name }}</a>#}
+{#                        <a class="nav-link" href="#">注销</a>#}
+{#                    {% else %}#}
+{#                        <a class="nav-link" href="{% url 'register' %}">注册</a>#}
+{#                        <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal">登录</a>#}
+{#                    {% endif %}#}
+{#                </ul>#}
+{#       <ul class="nav navbar-nav navbar-right">#}
+{#        <li class="dropdown">#}
+{#          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>#}
+{#          <ul class="dropdown-menu">#}
+{#            <li><a href="#">Action</a></li>#}
+{#            <li><a href="#">Another action</a></li>#}
+{#            <li><a href="#">Something else here</a></li>#}
+{#            <li role="separator" class="divider"></li>#}
+{#            <li><a href="#">Separated link</a></li>#}
+{#          </ul>#}
+{#        </li>#}
+{#      </ul>#}
 {#                <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="GET">#}
 {#                    <input  name="keyword" value="{{ keyword }}" class="form-control mr-sm-2" type="search" placeholder="Search"#}
 {#                           aria-label="Search">#}
 {#                    <button class="btn btn-outline-success" type="submit">搜索</button>#}
 {#                </form>#}
-            </div>
-        </nav>
-        <div class="jumbotron">
-            <h1 class="display-4">Typeidea</h1>
-            <p class="lead">基于Django的多人博客系统</p>
-        </div>
-    </div>
+{#            </div>#}
+{#        </nav>#}
+
+
+
+
+
+
     <div class="container main">
         <div class="row">
             <div class="col-9 post-list">
@@ -56,7 +152,7 @@
                 {% block siderbar %}
                         {% if sidebars %}
                             {% for sidebar in sidebars %}
-                                <div class="card sidebar post">
+                                <div class="card sidebar post" style="margin-top: 10px">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ sidebar.title }}</h4>
                                         {% autoescape off %}
@@ -86,11 +182,41 @@
                     {% endif %}
                 </nav>
             </div>
-            <div class="container power">
-                <span class="text-muted">power by Typeidea@zoe</span>
+            <div class="container power text-center">
+                <span class="text-muted">power by Dajngo@zoe</span>
             </div>
         {% endblock %}
     </footer>
+
+
+
+
+
+{#<script language="JavaScript" type="text/javascript">#}
+{#    var ident;#}
+{#    dent = window.setTimeout("hide_jb()",3000)#}
+{#    function hide_jb() {#}
+{#        var jb = document.getElementById('jb');#}
+{##}
+{#        jb.style        var jb_height = document.getElementById("jb").clientHeight#}
+{#        for(var i=jb_height; i>=0; i--){#}
+{#            #}
+{#        }.display="none";#}
+{#    }#}
+{#</script>#}
+
+
+
+
+{% bootstrap_javascript jquery='full' %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<script type="text/javascript" src="{% static 'js/cookie_util.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/close_introduce.js' %}"></script>
+
+
+
+
 </body>
 </html>
 

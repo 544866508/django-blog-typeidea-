@@ -30,9 +30,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # my app
     'typeidea',
+    'user',
     'blog',
     'config',
     'comment',
+    'bootstrap4',
 
     # django default
     'django.contrib.admin',

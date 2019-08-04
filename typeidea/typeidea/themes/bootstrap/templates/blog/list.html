@@ -8,9 +8,12 @@
         首页
     {% endif %}
 {% endblock %}
+
+{% block extra_main %}{% endblock %}
+
 {% block main %}
     {% for post in post_list %}
-        <div class="card post">
+        <div class="card post" style="margin-top: 10px">
             <div class="card-body">
                 <h5 class="card-title">
                     <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>

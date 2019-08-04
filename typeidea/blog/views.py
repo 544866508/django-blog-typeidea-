@@ -1,8 +1,20 @@
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 
 from config.models import SideBar
+from user.forms import LoginForm
 from .models import Tag, Post, Category
+
+
+# 针对CBV的登录验证（继承模式）
+class CheckLogin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.session.get('user_name', False):
+            response = super(CheckLogin, self).dispatch(request, *args, **kwargs)
+            return response
+        else:
+            return redirect('login')
 
 
 class BaseView:
@@ -10,6 +22,7 @@ class BaseView:
         context = super().get_context_data(**kwargs)
         context.update({
             'sidebars': SideBar.objects.filter(status=SideBar.STATUS_SHOW),
+            'loginform': LoginForm(),
         })
         context.update(Category.get_navcate_and_nomalcate())
         return context
@@ -59,6 +72,23 @@ class PostDetailView(BaseView, DetailView):
     template_name = 'blog/detail.html'
     context_object_name = 'post'
     pk_url_kwarg = 'post_id'
+
+
+class SearchView(IndexView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'keyword': self.request.GET.get('keyword', '')
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        keyword = self.request.GET.get('keyword')
+        if not keyword:
+            return queryset
+        else:
+            return queryset.filter(Q(title__icontains=keyword) | Q(desc__icontains=keyword))
 
 
 # def post_list(request, category_id=None, tag_id=None):
